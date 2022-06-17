@@ -37,7 +37,7 @@ android {
 }
 
 dependencies {
-// default
+    // default
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.2'
     implementation 'com.google.android.material:material:1.6.1'
@@ -58,19 +58,35 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-guava:1.4.2'
 
     // okhttp
-    implementation "com.squareup.okhttp3:okhttp:4.9.3"
-    implementation "com.squareup.okhttp3:okhttp-urlconnection:4.9.2"
-    implementation "com.squareup.okio:okio:2.10.0"
-    implementation "com.github.bumptech.glide:okhttp3-integration:4.11.0@aar"
+    implementation 'com.squareup.okhttp3:okhttp:4.9.3'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.9.2'
+    implementation 'com.squareup.okio:okio:2.10.0'
+    implementation 'com.github.bumptech.glide:okhttp3-integration:4.11.0@aar'
 
     // retrofit
-    implementation "com.squareup.retrofit2:retrofit:2.9.0"
-    implementation "com.squareup.retrofit2:converter-gson:2.9.0"
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.1'
-    implementation "com.google.code.gson:gson:2.8.9"
+    implementation 'com.google.code.gson:gson:2.8.9'
 
     // glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'jp.wasabeef:glide-transformations:4.3.0'
+
+    // fast adapter
+    implementation 'com.mikepenz:fastadapter:5.6.0'
+    implementation 'com.mikepenz:fastadapter-extensions-binding:5.6.0' // view binding helpers
+    implementation 'com.mikepenz:fastadapter-extensions-diff:5.6.0' // diff util helpers
+    implementation 'com.mikepenz:fastadapter-extensions-drag:5.6.0' // drag support
+    implementation 'com.mikepenz:fastadapter-extensions-paged:5.6.0' // paging support
+    implementation 'com.mikepenz:fastadapter-extensions-scroll:5.6.0' // scroll helpers
+    implementation 'com.mikepenz:fastadapter-extensions-swipe:5.6.0' // swipe support
+    implementation 'com.mikepenz:fastadapter-extensions-ui:5.6.0' // pre-defined ui components
+    implementation 'com.mikepenz:fastadapter-extensions-utils:5.6.0' // needs the `expandable`, `drag` and `scroll` extension.
+
+    // Room
+    implementation 'androidx.room:room-ktx:2.4.2'
+    implementation 'androidx.room:room-runtime:2.4.2'
+    kapt 'androidx.room:room-compiler:2.4.2'
 }
