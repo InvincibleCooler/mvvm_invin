@@ -1,5 +1,4 @@
 package invin.mvvm_invin.repository
 
 
-class BookRepository {
-}
+abstract class BaseRemoteDataSource
