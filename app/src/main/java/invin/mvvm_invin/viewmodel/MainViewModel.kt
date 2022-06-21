@@ -1,6 +1,5 @@
 package invin.mvvm_invin.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -18,10 +17,13 @@ class MainViewModel(private val bookRepository: BookRepository) : BaseViewModel(
     private val _resource = MutableLiveData<Resource<SearchRes>>().apply {
         postValue(Resource.success(null))
     }
-    val resouce: LiveData<Resource<SearchRes>> get() = _resource
+    val resource: LiveData<Resource<SearchRes>> get() = _resource
 
-    fun getBookList() {
-        Log.d(TAG, "getBookList()")
+    suspend fun getBookList(query: String, page: String = "1") {
+        _showProgress.postValue(true)
+        val resource = bookRepository.getBookList(query = query, page = page)
+        _showProgress.postValue(false)
+        _resource.postValue(resource)
     }
 
     class Factory(private val repository: BookRepository) : ViewModelProvider.NewInstanceFactory() {
