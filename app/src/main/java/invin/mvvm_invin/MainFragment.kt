@@ -9,6 +9,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
@@ -21,7 +22,6 @@ import invin.mvvm_invin.repository.book.BookLocalDataSource
 import invin.mvvm_invin.repository.book.BookRemoteDataSource
 import invin.mvvm_invin.repository.book.BookRepository
 import invin.mvvm_invin.viewmodel.MainViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -93,7 +93,7 @@ class MainFragment : Fragment() {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     val query = binding.etSearch.text.toString()
                     if (query.isNotEmpty()) {
-                        CoroutineScope(Dispatchers.IO).launch {
+                        lifecycleScope.launch(Dispatchers.IO) {
                             viewModel.getBookList(query)
                         }
                     }
