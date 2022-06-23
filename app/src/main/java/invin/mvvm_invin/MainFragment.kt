@@ -1,5 +1,6 @@
 package invin.mvvm_invin
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.LayoutInflater
@@ -11,19 +12,23 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.adapters.ItemAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import invin.mvvm_invin.databinding.FragmentMainBinding
+import invin.mvvm_invin.databinding.ListitemEmptyBinding
+import invin.mvvm_invin.databinding.ListitemMainBinding
 import invin.mvvm_invin.net.RequestManager
 import invin.mvvm_invin.net.Resource
+import invin.mvvm_invin.net.res.BookInfo
 import invin.mvvm_invin.repository.book.BookRemoteDataSource
 import invin.mvvm_invin.repository.book.BookRepository
 import invin.mvvm_invin.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.*
 
 
+//@AndroidEntryPoint
 class MainFragment : Fragment() {
     companion object {
         private const val TAG = "MainFragment"
@@ -32,8 +37,7 @@ class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var fastAdapter: FastAdapter<GenericItem>
-    private lateinit var itemAdapter: ItemAdapter<GenericItem>
+    private lateinit var localAdapter: LocalAdapter
 
     private var page = "1"
 
@@ -48,10 +52,7 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Create empty ItemAdapter
-        itemAdapter = ItemAdapter.items()
-        fastAdapter = FastAdapter.with(itemAdapter)
+        localAdapter = LocalAdapter(requireActivity())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -59,11 +60,20 @@ class MainFragment : Fragment() {
             when (it.status) {
                 Resource.Status.SUCCESS -> {
                     if (it.data == null) {
-                        itemAdapter.add(MainItemEmpty())
+                        localAdapter.items = Collections.singletonList(WrappedData().apply {
+                            viewType = localAdapter.viewTypeEmpty
+                        })
                     } else {
-                        itemAdapter.clear()
-                        it.data.books?.forEach { bookInfo ->
-                            itemAdapter.add(MainItemList(bookInfo))
+                        val books = it.data.books
+                        if (books.isNullOrEmpty().not()) {
+                            localAdapter.clear()
+                            localAdapter.items = books!!.map {
+                                WrappedData().apply {
+                                    viewType = localAdapter.viewTypeItem
+                                    data = it
+                                }
+                            }.toMutableList()
+                            localAdapter.notifyItemRangeChanged(0, books.size)
                         }
                     }
                 }
@@ -101,7 +111,7 @@ class MainFragment : Fragment() {
 
         binding.recyclerView.apply {
             layoutManager = LinearLayoutManager(requireActivity())
-            adapter = fastAdapter
+            adapter = localAdapter
             setHasFixedSize(true)
             requestFocus()
         }
@@ -110,5 +120,61 @@ class MainFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private inner class LocalAdapter(private val activity: Activity) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+        val viewTypeEmpty = 1
+        val viewTypeItem = 2
+
+        var items = mutableListOf<WrappedData>()
+            set(value) {
+                field.addAll(value)
+            }
+
+        fun clear() {
+            items.clear()
+        }
+
+        override fun getItemCount(): Int {
+            return items.size
+        }
+
+        override fun getItemViewType(position: Int): Int {
+            return items[position].viewType
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            return when (viewType) {
+                viewTypeItem -> {
+                    ItemViewHolder(ListitemMainBinding.inflate(LayoutInflater.from(activity), parent, false))
+                }
+                else -> {
+                    EmptyViewHolder(ListitemEmptyBinding.inflate(LayoutInflater.from(activity), parent, false))
+                }
+            }
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            when (holder.itemViewType) {
+                viewTypeEmpty -> {
+                    // do nothing
+                }
+                viewTypeItem -> {
+                    val vh = holder as ItemViewHolder
+                    val data = items[position].data as BookInfo
+
+                    Glide.with(activity).load(data.image).into(vh.binding.ivThumb)
+
+                    vh.binding.tvTitle.text = data.title
+                    vh.binding.tvSubTitle.text = data.subtitle
+                    vh.binding.tvPrice.text = data.price
+                }
+            }
+        }
+
+        private inner class EmptyViewHolder(_binding: ListitemEmptyBinding) : RecyclerView.ViewHolder(_binding.root)
+        private inner class ItemViewHolder(_binding: ListitemMainBinding) : RecyclerView.ViewHolder(_binding.root) {
+            val binding = _binding
+        }
     }
 }

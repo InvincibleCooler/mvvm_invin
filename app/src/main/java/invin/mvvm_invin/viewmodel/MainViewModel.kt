@@ -1,16 +1,17 @@
 package invin.mvvm_invin.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import dagger.hilt.android.lifecycle.HiltViewModel
 import invin.mvvm_invin.net.Resource
 import invin.mvvm_invin.net.res.SearchRes
 import invin.mvvm_invin.repository.book.BookRepository
+import javax.inject.Inject
 
-
-class MainViewModel(private val bookRepository: BookRepository) : BaseViewModel() {
+//@HiltViewModel
+class MainViewModel (private val bookRepository: BookRepository) : BaseViewModel() {
     companion object {
         private const val TAG = "MainViewModel"
     }
