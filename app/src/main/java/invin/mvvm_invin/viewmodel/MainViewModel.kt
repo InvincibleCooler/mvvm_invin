@@ -21,15 +21,11 @@ class MainViewModel(private val bookRepository: BookRepository) : BaseViewModel(
     val resource: LiveData<Resource<SearchRes>> get() = _resource
 
     suspend fun getBookList(query: String, page: String = "1") {
-        Log.d(TAG, "lastRequestedTime : $lastRequestedTime")
-        if (isExpired()) {
-            Log.d(TAG, "request server")
-            _showProgress.postValue(true)
-            val resource = bookRepository.getBookList(query = query, page = page)
-            _showProgress.postValue(false)
-            _resource.postValue(resource)
-            lastRequestedTime = System.currentTimeMillis()
-        }
+        _showProgress.postValue(true)
+        val resource = bookRepository.getBookList(query = query, page = page)
+        _showProgress.postValue(false)
+        _resource.postValue(resource)
+        lastRequestedTime = System.currentTimeMillis()
     }
 
     class Factory(private val repository: BookRepository) : ViewModelProvider.NewInstanceFactory() {

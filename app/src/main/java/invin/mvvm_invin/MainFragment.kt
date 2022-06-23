@@ -15,10 +15,8 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import invin.mvvm_invin.databinding.FragmentMainBinding
-import invin.mvvm_invin.db.ApiDataBase
 import invin.mvvm_invin.net.RequestManager
 import invin.mvvm_invin.net.Resource
-import invin.mvvm_invin.repository.book.BookLocalDataSource
 import invin.mvvm_invin.repository.book.BookRemoteDataSource
 import invin.mvvm_invin.repository.book.BookRepository
 import invin.mvvm_invin.viewmodel.MainViewModel
@@ -40,13 +38,11 @@ class MainFragment : Fragment() {
     private var page = "1"
 
     private val viewModel by viewModels<MainViewModel> {
-        val dao = ApiDataBase.getInstance(requireActivity()).apiDao()
-        val serviceApi = RequestManager.getServiceApi(null)
+        val serviceApi = RequestManager.getServiceApi()
 
-        val localDataSource = BookLocalDataSource(dao)
         val remoteDataSource = BookRemoteDataSource(serviceApi)
 
-        val bookRepository = BookRepository(localDataSource, remoteDataSource)
+        val bookRepository = BookRepository(remoteDataSource)
         MainViewModel.Factory(bookRepository)
     }
 
