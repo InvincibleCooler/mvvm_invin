@@ -4,7 +4,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-
+// 나중에 di방식으로 base url 나눠보자.
 object RetrofitClient {
     private var BASE_URL = "https://api.itbook.store/1.0/"
     // singleton 방식
