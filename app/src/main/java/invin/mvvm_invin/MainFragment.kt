@@ -14,21 +14,19 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import dagger.hilt.android.AndroidEntryPoint
 import invin.mvvm_invin.databinding.FragmentMainBinding
 import invin.mvvm_invin.databinding.ListitemEmptyBinding
 import invin.mvvm_invin.databinding.ListitemMainBinding
-import invin.mvvm_invin.net.RequestManager
 import invin.mvvm_invin.net.Resource
 import invin.mvvm_invin.net.res.BookInfo
-import invin.mvvm_invin.repository.book.BookRemoteDataSource
-import invin.mvvm_invin.repository.book.BookRepository
 import invin.mvvm_invin.viewmodel.MainViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.*
 
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class MainFragment : Fragment() {
     companion object {
         private const val TAG = "MainFragment"
@@ -41,14 +39,7 @@ class MainFragment : Fragment() {
 
     private var page = "1"
 
-    private val viewModel by viewModels<MainViewModel> {
-        val serviceApi = RequestManager.getServiceApi()
-
-        val remoteDataSource = BookRemoteDataSource(serviceApi)
-
-        val bookRepository = BookRepository(remoteDataSource)
-        MainViewModel.Factory(bookRepository)
-    }
+    private val viewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

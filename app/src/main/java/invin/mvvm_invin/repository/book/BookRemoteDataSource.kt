@@ -6,9 +6,10 @@ import invin.mvvm_invin.net.res.SearchRes
 import invin.mvvm_invin.repository.BaseRemoteDataSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 
-class BookRemoteDataSource(private val serviceApi: ServiceApi) : BaseRemoteDataSource() {
+class BookRemoteDataSource @Inject constructor(private val serviceApi: ServiceApi) : BaseRemoteDataSource() {
     companion object {
         private const val TAG = "BookRemoteDataSource"
     }
