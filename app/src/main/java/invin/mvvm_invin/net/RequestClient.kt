@@ -26,11 +26,26 @@ class RequestClient(private val _headers: HashMap<String, String>?) {
             connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
             writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
             readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
+            addInterceptor(ParamInterceptor())
             addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
             addNetworkInterceptor(AddHeaderInterceptor())
         }.build()
+    }
+
+    private inner class ParamInterceptor : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val original = chain.request()
+            val originalHttpUrl = original.url
+            val modifiedUrl = originalHttpUrl.newBuilder()
+                .addQueryParameter("cpId", "AS40")
+                .addQueryParameter("cpKey", "14LNC3")
+                .build()
+            val requestBuilder = original.newBuilder()
+                .url(modifiedUrl)
+            return chain.proceed(requestBuilder.build())
+        }
     }
 
     private inner class AddHeaderInterceptor : Interceptor {
