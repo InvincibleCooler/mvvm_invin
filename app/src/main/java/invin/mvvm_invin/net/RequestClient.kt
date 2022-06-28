@@ -8,7 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import java.util.concurrent.TimeUnit
 
 
-class RequestClient(private val _headers: HashMap<String, String>?) {
+class RequestClient(private val _headers: HashMap<String, String>? = null) {
     companion object {
         private const val TAG = "RequestClient"
 
@@ -26,31 +26,22 @@ class RequestClient(private val _headers: HashMap<String, String>?) {
             connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
             writeTimeout(WRITE_TIME_OUT, TimeUnit.SECONDS)
             readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
+            addInterceptor(HeaderInterceptor())
             addInterceptor(ParamInterceptor())
             addInterceptor(HttpLoggingInterceptor().apply {
                 level = HttpLoggingInterceptor.Level.BODY
             })
-            addNetworkInterceptor(AddHeaderInterceptor())
         }.build()
     }
 
-    private inner class ParamInterceptor : Interceptor {
+    private inner class HeaderInterceptor : Interceptor {
         override fun intercept(chain: Interceptor.Chain): Response {
-            val original = chain.request()
-            val originalHttpUrl = original.url
-            val modifiedUrl = originalHttpUrl.newBuilder()
-                .addQueryParameter("cpId", "AS40")
-                .addQueryParameter("cpKey", "14LNC3")
-                .build()
-            val requestBuilder = original.newBuilder()
-                .url(modifiedUrl)
-            return chain.proceed(requestBuilder.build())
-        }
-    }
+            val builder = chain.request().newBuilder().apply {
+                header("User-Agent", "AS40; Android 12; 6.4.8.1-DEV; SM-S908N")
+                header("Accept-Charset", "utf-8")
+                header("Accept-Encoding", "gzip,deflate")
+            }
 
-    private inner class AddHeaderInterceptor : Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val builder = chain.request().newBuilder()
             if (_headers.isNullOrEmpty().not()) {
                 val headers = _headers!!
                 for (key in headers.keys) {
@@ -61,6 +52,19 @@ class RequestClient(private val _headers: HashMap<String, String>?) {
                     }
                 }
             }
+            return chain.proceed(builder.build())
+        }
+    }
+
+    private inner class ParamInterceptor : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request = chain.request()
+            val builder = request.newBuilder()
+
+            builder.url(request.url.newBuilder().apply {
+                addQueryParameter("cpId", "AS40")
+                addQueryParameter("cpKey", "14LNC3")
+            }.build())
             return chain.proceed(builder.build())
         }
     }
