@@ -8,4 +8,9 @@
         android:id="@+id/fragment_main"
         android:name="invin.mvvm_invin.MainFragment"
         android:label="main fragment" />
+
+    <fragment
+        android:id="@+id/fragment_detail"
+        android:name="invin.mvvm_invin.DetailFragment"
+        android:label="detail fragment" />
 </navigation>

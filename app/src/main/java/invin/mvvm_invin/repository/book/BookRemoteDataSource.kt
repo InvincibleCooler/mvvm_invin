@@ -1,5 +1,6 @@
 package invin.mvvm_invin.repository.book
 
+import android.util.Log
 import invin.mvvm_invin.net.Resource
 import invin.mvvm_invin.net.ServiceApi
 import invin.mvvm_invin.net.res.SearchRes
@@ -18,8 +19,10 @@ class BookRemoteDataSource @Inject constructor(private val serviceApi: ServiceAp
         return withContext(Dispatchers.IO) {
             try {
                 val res = serviceApi.getSearch(query, page)
+                Log.d(TAG, "Success")
                 Resource.success(res)
             } catch (exception: Exception) {
+                Log.d(TAG, "Fail : ${exception.message}")
                 Resource.error(exception)
             }
         }

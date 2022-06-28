@@ -7,7 +7,7 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class App : Application() {
     companion object {
-        const val TAG = "RenewApplication"
+        const val TAG = "App"
 
         private lateinit var instance: App
 

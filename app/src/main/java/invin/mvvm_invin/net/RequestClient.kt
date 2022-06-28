@@ -39,7 +39,7 @@ class RequestClient(private val _headers: HashMap<String, String>? = null) {
             val builder = chain.request().newBuilder().apply {
                 header("User-Agent", "AS40; Android 12; 6.4.8.1-DEV; SM-S908N")
                 header("Accept-Charset", "utf-8")
-                header("Accept-Encoding", "gzip,deflate")
+//                header("Accept-Encoding", "gzip,deflate")
             }
 
             if (_headers.isNullOrEmpty().not()) {
