@@ -2,6 +2,7 @@ package invin.mvvm_invin
 
 import android.app.Activity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +58,9 @@ class DetailFragment : Fragment() {
                 }.toMutableList()
                 localAdapter.notifyItemRangeChanged(0, it.size)
             }
+        }
+        viewModel.getTotalCount().observe(viewLifecycleOwner) {
+            Log.d(TAG, "total count : $it")
         }
 
         viewModel.showProgress.observe(viewLifecycleOwner) {

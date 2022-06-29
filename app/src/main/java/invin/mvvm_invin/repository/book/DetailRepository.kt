@@ -17,7 +17,7 @@ class DetailRepository @Inject constructor(private val dao: ApiDao) {
     }
 
     // for test
-    fun getTotalCount(): Int {
+    fun getTotalCount(): Flow<Int> {
         return dao.getTotalCount()
     }
 

@@ -19,7 +19,7 @@ interface ApiDao {
     fun getAll(): Flow<List<ApiEntity>>
 
     @Query("select count(*) from tb_api")
-    fun getTotalCount(): Int
+    fun getTotalCount(): Flow<Int>
 
     @Query("select body from tb_api where `key` = :key")
     fun getApi(key: String): String?

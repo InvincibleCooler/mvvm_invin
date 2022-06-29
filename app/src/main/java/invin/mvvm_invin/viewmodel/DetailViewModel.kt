@@ -17,8 +17,8 @@ class DetailViewModel @Inject constructor(private val repository: DetailReposito
         repository.insertBook()
     }
 
-    fun getTotalCount(): Int {
-        return repository.getTotalCount()
+    fun getTotalCount(): LiveData<Int> {
+        return repository.getTotalCount().asLiveData()
     }
 
     suspend fun deleteAllData(): Int {
