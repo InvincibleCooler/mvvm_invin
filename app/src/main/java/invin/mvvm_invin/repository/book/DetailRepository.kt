@@ -3,6 +3,7 @@ package invin.mvvm_invin.repository.book
 import invin.mvvm_invin.db.ApiDao
 import invin.mvvm_invin.db.ApiEntity
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import javax.inject.Inject
 
 
@@ -26,6 +27,6 @@ class DetailRepository @Inject constructor(private val dao: ApiDao) {
     }
 
     fun getAll(): Flow<List<ApiEntity>> {
-        return dao.getAll()
+        return dao.getAll().distinctUntilChanged()
     }
 }
