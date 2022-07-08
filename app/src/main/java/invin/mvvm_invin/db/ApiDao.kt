@@ -32,4 +32,5 @@ interface ApiDao {
 
     @Query("delete from tb_api")
     suspend fun deleteAll(): Int
+
 }
